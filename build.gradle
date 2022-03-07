@@ -1,0 +1,56 @@
+plugins {
+	id 'org.springframework.boot' version '2.6.4'
+	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+	id 'java'
+}
+
+group = 'com.template'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '11'
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
+
+// build module-front
+processResources {
+	dependsOn "copyModuleFront"
+}
+
+def moduleFrontDir = "$projectDir/src/main/module-front"
+
+task installModuleFront(type: Exec, description: 'npm install for module-front') {
+	workingDir "$moduleFrontDir"
+
+	if (System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows')) {
+		commandLine "npm.cmd", "audit", "fix"
+		commandLine 'npm.cmd', 'install'
+	} else {
+		commandLine "npm", "audit", "fix"
+		commandLine 'npm', 'install'
+	}
+}
+
+task buildModuleFront(type: Exec, dependsOn: installModuleFront, description: 'npm build for module-front') {
+	workingDir "$moduleFrontDir"
+
+	if (System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows')) {
+		commandLine "npm.cmd", "run-script", "build"
+	} else {
+		commandLine "npm", "run-script", "build"
+	}
+}
+
+task copyModuleFront(type: Copy, dependsOn: buildModuleFront, description: 'Copy module-front to spring-boot') {
+	from "$moduleFrontDir/build"
+	into "$projectDir/src/main/resources/static"
+}

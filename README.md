@@ -1,6 +1,6 @@
 ## spring-boot-with-react-module
 
-- 스프링부트와 [CRA(Create React App)](https://create-react-app.dev/docs/getting-started) 연동 프로젝트 템플릿
+- 스프링부트와 [CRA(Create React App)](https://create-react-app.dev/docs/getting-started) 연동 프로젝트 템플릿(feat. Gradle)
 
 ---
 

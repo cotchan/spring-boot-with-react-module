@@ -21,15 +21,15 @@ tasks.named('test') {
 	useJUnitPlatform()
 }
 
-// build module-front
+// build front-module
 processResources {
-	dependsOn "copyModuleFront"
+	dependsOn "copyFrontModule"
 }
 
-def moduleFrontDir = "$projectDir/src/main/module-front"
+def frontModuleDir = "$projectDir/front-module"
 
-task installModuleFront(type: Exec, description: 'npm install for module-front') {
-	workingDir "$moduleFrontDir"
+task installFrontModule(type: Exec, description: 'npm install for front-module') {
+	workingDir "$frontModuleDir"
 
 	if (System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows')) {
 		commandLine "npm.cmd", "audit", "fix"
@@ -40,8 +40,8 @@ task installModuleFront(type: Exec, description: 'npm install for module-front')
 	}
 }
 
-task buildModuleFront(type: Exec, dependsOn: installModuleFront, description: 'npm build for module-front') {
-	workingDir "$moduleFrontDir"
+task buildFrontModule(type: Exec, dependsOn: installFrontModule, description: 'npm build for front-module') {
+	workingDir "$frontModuleDir"
 
 	if (System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows')) {
 		commandLine "npm.cmd", "run-script", "build"
@@ -50,7 +50,7 @@ task buildModuleFront(type: Exec, dependsOn: installModuleFront, description: 'n
 	}
 }
 
-task copyModuleFront(type: Copy, dependsOn: buildModuleFront, description: 'Copy module-front to spring-boot') {
-	from "$moduleFrontDir/build"
+task copyFrontModule(type: Copy, dependsOn: buildFrontModule, description: 'Copy front-module to spring-boot') {
+	from "$frontModuleDir/build"
 	into "$projectDir/src/main/resources/static"
 }
